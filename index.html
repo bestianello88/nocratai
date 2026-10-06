@@ -87,7 +87,7 @@ body{ margin:0; background:var(--page); color:var(--ink); font-family:var(--body
 .meter b{ display:block; font-weight:700; font-size:21px; color:var(--amber); font-variant-numeric:tabular-nums; white-space:nowrap; }
 .meter b.neg{ color:var(--led); }
 
-.controls{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:14px; }
+.controls{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px; }
 button{ font-family:var(--body); font-weight:700; font-size:18px; border:0; border-radius:12px; cursor:pointer; padding:12px 8px; color:#2B1500; background:linear-gradient(180deg,#F0CB5E,var(--brass) 55%,#A9821A); box-shadow:0 4px 0 #6E5208; transition:transform .06s, box-shadow .06s, filter .15s; }
 button:active{ transform:translateY(3px); box-shadow:0 1px 0 #6E5208; }
 button:disabled{ filter:grayscale(.8) brightness(.75); cursor:not-allowed; }
@@ -212,7 +212,6 @@ body.home-aperta{ overflow:hidden; }
       <button class="spin" id="btnGioca">Gioca 1 €</button>
       <button id="btnAuto">Auto</button>
       <button id="btnMolt" aria-label="Moltiplicatore vincite">Vinci ×1</button>
-      <button id="btnFine">Fine ciclo</button>
     </div>
   </div>
 
@@ -719,7 +718,6 @@ body.home-aperta{ overflow:hidden; }
       fine.innerHTML = `Ciclo chiuso: ${fmtE(S.incassato)} incassati, ${fmtE(S.erogato)} restituiti, RTP verificato ${fmtP(rtp)}. Giocando sempre con lo stesso moltiplicatore il ciclo restituisce esattamente il ${RTP_TARGET}%, perché i premi erano già scritti prima della prima giocata.`;
     }
     $('btnGioca').disabled = finito || spinning || !!modo;
-    $('btnFine').disabled = finito;
     $('btnAuto').disabled = finito;
     const bm = $('btnMolt');
     bm.textContent = `Vinci ×${molt}`;
@@ -832,18 +830,6 @@ body.home-aperta{ overflow:hidden; }
     if (spinning) return;
     molt = MOLTIPLICATORI[(MOLTIPLICATORI.indexOf(molt) + 1) % MOLTIPLICATORI.length];
     Suono.gettone();
-    render();
-  });
-
-  $('btnFine').addEventListener('click', () => {
-    if (spinning) return;
-    fermaModo();
-    let ultimo = 0;
-    while (S.i < TOT_GIOCATE) ultimo = prossimaGiocata();
-    rulliFermi(rulliPer(ultimo));
-    esito.textContent = 'Ciclo completato'; esito.classList.remove('neutro');
-    Suono.fineCiclo();
-    reelsBox.classList.remove('vinto');
     render();
   });
 
